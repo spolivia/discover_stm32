@@ -8,7 +8,7 @@ TARGET = test
 # building variables
 ######################################
 # debug build?
-DEBUG = 0
+DEBUG = 1
 # optimization
 OPT = -Og
 
@@ -24,7 +24,7 @@ BUILD_DIR = build
 ######################################
 
 # C sources
-C_SOURCES = src/main.c 
+C_SOURCES = src/main.c src/stmbf407.c 
 
 # ASM sources
 ASM_SOURCES = startup_stm32f407xx.s
@@ -81,7 +81,7 @@ C_DEFS =
 AS_INCLUDES = 
 
 # C includes
-C_INCLUDES = 
+C_INCLUDES = -I./include/  
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections

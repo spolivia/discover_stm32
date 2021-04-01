@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccT4aDTS.s 			page 1
+ARM GAS  /tmp/cc0UQ0Ho.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -15,45 +15,167 @@ ARM GAS  /tmp/ccT4aDTS.s 			page 1
   12              		.eabi_attribute 18, 4
   13              		.file	"main.c"
   14              		.text
-  15              		.section	.text.main,"ax",%progbits
-  16              		.align	1
-  17              		.global	main
-  18              		.arch armv7e-m
-  19              		.syntax unified
-  20              		.thumb
-  21              		.thumb_func
-  22              		.fpu fpv4-sp-d16
-  24              	main:
-  25              		@ Volatile: function does not return.
-  26              		@ args = 0, pretend = 0, frame = 0
-  27              		@ frame_needed = 0, uses_anonymous_args = 0
-  28              		@ link register save eliminated.
-  29 0000 074A     		ldr	r2, .L3
-  30 0002 136B     		ldr	r3, [r2, #48]
-  31 0004 43F00803 		orr	r3, r3, #8
-  32 0008 1363     		str	r3, [r2, #48]
-  33 000a 064B     		ldr	r3, .L3+4
-  34 000c 1A68     		ldr	r2, [r3]
-  35 000e 42F0AA42 		orr	r2, r2, #1426063360
-  36 0012 1A60     		str	r2, [r3]
-  37 0014 5A69     		ldr	r2, [r3, #20]
-  38 0016 42F47042 		orr	r2, r2, #61440
-  39 001a 5A61     		str	r2, [r3, #20]
-  40              	.L2:
-  41 001c FEE7     		b	.L2
-  42              	.L4:
-  43 001e 00BF     		.align	2
-  44              	.L3:
-  45 0020 00380240 		.word	1073887232
-  46 0024 000C0240 		.word	1073875968
-  48              		.ident	"GCC: (15:9-2019-q4-0ubuntu1) 9.2.1 20191025 (release) [ARM/arm-9-branch revision 277599]"
-ARM GAS  /tmp/ccT4aDTS.s 			page 2
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.main,"ax",%progbits
+  18              		.align	1
+  19              		.global	main
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	main:
+  27              	.LFB0:
+  28              		.file 1 "src/main.c"
+   1:src/main.c    **** #include <stdint.h>
+   2:src/main.c    **** #include "stmbf407.h"
+   3:src/main.c    **** 
+   4:src/main.c    **** #define     __IO    volatile
+   5:src/main.c    **** 
+   6:src/main.c    **** #define PERIPH_BASE 0x40000000UL //Si on regarde dans le référence manual, on trouve que les regi
+   7:src/main.c    **** #define AHB1PERIPH_BASE (PERIPH_BASE + 0x00020000UL) //D'où son utilisation avec un "+" ensuite
+   8:src/main.c    **** #define GPIOD_BASE (AHB1PERIPH_BASE + 0x0C00UL) //Où a-t-il trouvé l'adresse de "base" AHB1 
+   9:src/main.c    **** #define GPIOD ((GPIO_TypeDef *) GPIOD_BASE) 
+  10:src/main.c    **** 
+  11:src/main.c    **** #define RCC_BASE (AHB1PERIPH_BASE + 0x3800UL)
+  12:src/main.c    **** #define RCC ((RCC_TypeDef *) RCC_BASE)
+  13:src/main.c    **** 
+  14:src/main.c    **** typedef struct
+  15:src/main.c    **** {
+  16:src/main.c    ****   __IO uint32_t MODER;    
+  17:src/main.c    ****   __IO uint32_t OTYPER;   
+  18:src/main.c    ****   __IO uint32_t OSPEEDR;  
+  19:src/main.c    ****   __IO uint32_t PUPDR;    
+  20:src/main.c    ****   __IO uint32_t IDR;      
+  21:src/main.c    ****   __IO uint32_t ODR;      
+  22:src/main.c    ****   __IO uint32_t BSRR;     
+  23:src/main.c    ****   __IO uint32_t LCKR;     
+  24:src/main.c    ****   __IO uint32_t AFR[2];   
+  25:src/main.c    **** } GPIO_TypeDef;
+  26:src/main.c    **** 
+  27:src/main.c    **** typedef struct
+  28:src/main.c    **** {
+  29:src/main.c    ****   __IO uint32_t CR;            
+  30:src/main.c    ****   __IO uint32_t PLLCFGR;       
+ARM GAS  /tmp/cc0UQ0Ho.s 			page 2
+
+
+  31:src/main.c    ****   __IO uint32_t CFGR;          
+  32:src/main.c    ****   __IO uint32_t CIR;           
+  33:src/main.c    ****   __IO uint32_t AHB1RSTR;      
+  34:src/main.c    ****   __IO uint32_t AHB2RSTR;      
+  35:src/main.c    ****   __IO uint32_t AHB3RSTR;      
+  36:src/main.c    ****   uint32_t      RESERVED0;     
+  37:src/main.c    ****   __IO uint32_t APB1RSTR;      
+  38:src/main.c    ****   __IO uint32_t APB2RSTR;      
+  39:src/main.c    ****   uint32_t      RESERVED1[2];  
+  40:src/main.c    ****   __IO uint32_t AHB1ENR;       
+  41:src/main.c    ****   __IO uint32_t AHB2ENR;       
+  42:src/main.c    ****   __IO uint32_t AHB3ENR;       
+  43:src/main.c    ****   uint32_t      RESERVED2;     
+  44:src/main.c    ****   __IO uint32_t APB1ENR;       
+  45:src/main.c    ****   __IO uint32_t APB2ENR;       
+  46:src/main.c    ****   uint32_t      RESERVED3[2];  
+  47:src/main.c    ****   __IO uint32_t AHB1LPENR;     
+  48:src/main.c    ****   __IO uint32_t AHB2LPENR;     
+  49:src/main.c    ****   __IO uint32_t AHB3LPENR;     
+  50:src/main.c    ****   uint32_t      RESERVED4;     
+  51:src/main.c    ****   __IO uint32_t APB1LPENR;     
+  52:src/main.c    ****   __IO uint32_t APB2LPENR;     
+  53:src/main.c    ****   uint32_t      RESERVED5[2];  
+  54:src/main.c    ****   __IO uint32_t BDCR;          
+  55:src/main.c    ****   __IO uint32_t CSR;           
+  56:src/main.c    ****   uint32_t      RESERVED6[2];  
+  57:src/main.c    ****   __IO uint32_t SSCGR;         
+  58:src/main.c    ****   __IO uint32_t PLLI2SCFGR;    
+  59:src/main.c    **** } RCC_TypeDef;
+  60:src/main.c    ****  
+  61:src/main.c    **** 
+  62:src/main.c    **** int main()
+  63:src/main.c    **** {
+  29              		.loc 1 63 1 view -0
+  30              		.cfi_startproc
+  31              		@ Volatile: function does not return.
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34 0000 08B5     		push	{r3, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 3, -8
+  38              		.cfi_offset 14, -4
+  64:src/main.c    ****     RCC->AHB1ENR |= 1<<3;
+  39              		.loc 1 64 5 view .LVU1
+  40              		.loc 1 64 18 is_stmt 0 view .LVU2
+  41 0002 0D4A     		ldr	r2, .L4
+  42 0004 136B     		ldr	r3, [r2, #48]
+  43 0006 43F00803 		orr	r3, r3, #8
+  44 000a 1363     		str	r3, [r2, #48]
+  65:src/main.c    ****     GPIOD->MODER |= 0x55000000;
+  45              		.loc 1 65 5 is_stmt 1 view .LVU3
+  46              		.loc 1 65 18 is_stmt 0 view .LVU4
+  47 000c 0B4B     		ldr	r3, .L4+4
+  48 000e 1A68     		ldr	r2, [r3]
+  49 0010 42F0AA42 		orr	r2, r2, #1426063360
+  50 0014 1A60     		str	r2, [r3]
+ARM GAS  /tmp/cc0UQ0Ho.s 			page 3
+
+
+  66:src/main.c    **** 
+  67:src/main.c    ****     GPIOD->ODR = 0x0000; 
+  51              		.loc 1 67 5 is_stmt 1 view .LVU5
+  52              		.loc 1 67 16 is_stmt 0 view .LVU6
+  53 0016 0022     		movs	r2, #0
+  54 0018 5A61     		str	r2, [r3, #20]
+  55              	.L2:
+  68:src/main.c    ****     
+  69:src/main.c    ****     while(1){
+  56              		.loc 1 69 5 is_stmt 1 discriminator 1 view .LVU7
+  70:src/main.c    ****         GPIOD->ODR |= 0xA000; 
+  57              		.loc 1 70 9 discriminator 1 view .LVU8
+  58              		.loc 1 70 20 is_stmt 0 discriminator 1 view .LVU9
+  59 001a 084C     		ldr	r4, .L4+4
+  60 001c 6369     		ldr	r3, [r4, #20]
+  61 001e 43F42043 		orr	r3, r3, #40960
+  62 0022 6361     		str	r3, [r4, #20]
+  71:src/main.c    ****         stmbf407_wait(5) ; 
+  63              		.loc 1 71 9 is_stmt 1 discriminator 1 view .LVU10
+  64 0024 0520     		movs	r0, #5
+  65 0026 FFF7FEFF 		bl	stmbf407_wait
+  66              	.LVL0:
+  72:src/main.c    **** 
+  73:src/main.c    ****         GPIOD->ODR = 0x0000; 
+  67              		.loc 1 73 9 discriminator 1 view .LVU11
+  68              		.loc 1 73 20 is_stmt 0 discriminator 1 view .LVU12
+  69 002a 0023     		movs	r3, #0
+  70 002c 6361     		str	r3, [r4, #20]
+  74:src/main.c    ****         stmbf407_wait(5) ; 
+  71              		.loc 1 74 9 is_stmt 1 discriminator 1 view .LVU13
+  72 002e 0520     		movs	r0, #5
+  73 0030 FFF7FEFF 		bl	stmbf407_wait
+  74              	.LVL1:
+  69:src/main.c    ****         GPIOD->ODR |= 0xA000; 
+  75              		.loc 1 69 10 discriminator 1 view .LVU14
+  76 0034 F1E7     		b	.L2
+  77              	.L5:
+  78 0036 00BF     		.align	2
+  79              	.L4:
+  80 0038 00380240 		.word	1073887232
+  81 003c 000C0240 		.word	1073875968
+  82              		.cfi_endproc
+  83              	.LFE0:
+  85              		.text
+  86              	.Letext0:
+  87              		.file 2 "/usr/lib/gcc/arm-none-eabi/9.2.1/include/stdint.h"
+  88              		.file 3 "./include/stmbf407.h"
+ARM GAS  /tmp/cc0UQ0Ho.s 			page 4
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.c
-     /tmp/ccT4aDTS.s:16     .text.main:0000000000000000 $t
-     /tmp/ccT4aDTS.s:24     .text.main:0000000000000000 main
-     /tmp/ccT4aDTS.s:45     .text.main:0000000000000020 $d
+     /tmp/cc0UQ0Ho.s:18     .text.main:0000000000000000 $t
+     /tmp/cc0UQ0Ho.s:26     .text.main:0000000000000000 main
+     /tmp/cc0UQ0Ho.s:80     .text.main:0000000000000038 $d
 
-NO UNDEFINED SYMBOLS
+UNDEFINED SYMBOLS
+stmbf407_wait

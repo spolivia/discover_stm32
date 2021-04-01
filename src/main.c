@@ -1,12 +1,12 @@
 #include <stdint.h>
+#include "stmbf407.h"
 
 #define     __IO    volatile
-#define     __IOM   volatile
 
-#define PERIPH_BASE 0x40000000UL
-#define AHB1PERIPH_BASE (PERIPH_BASE + 0x00020000UL)
-#define GPIOD_BASE (AHB1PERIPH_BASE + 0x0C00UL)
-#define GPIOD ((GPIO_TypeDef *) GPIOD_BASE)
+#define PERIPH_BASE 0x40000000UL //Si on regarde dans le référence manual, on trouve que les registres commencent tous à partir de cette adresse. 
+#define AHB1PERIPH_BASE (PERIPH_BASE + 0x00020000UL) //D'où son utilisation avec un "+" ensuite
+#define GPIOD_BASE (AHB1PERIPH_BASE + 0x0C00UL) //Où a-t-il trouvé l'adresse de "base" AHB1 
+#define GPIOD ((GPIO_TypeDef *) GPIOD_BASE) 
 
 #define RCC_BASE (AHB1PERIPH_BASE + 0x3800UL)
 #define RCC ((RCC_TypeDef *) RCC_BASE)
@@ -61,13 +61,19 @@ typedef struct
 
 int main()
 {
- 
     RCC->AHB1ENR |= 1<<3;
     GPIOD->MODER |= 0x55000000;
-    GPIOD->ODR |= 0xF000; 
 
-    while(1);
+    GPIOD->ODR = 0x0000; 
+    
+    while(1){
+        GPIOD->ODR |= 0xA000; 
+        stmbf407_wait(5) ; 
 
+        GPIOD->ODR = 0x0000; 
+        stmbf407_wait(5) ; 
+
+    }
   return 0;
 }
 
